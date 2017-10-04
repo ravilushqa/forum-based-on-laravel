@@ -10,7 +10,8 @@ class Thread extends Model
 
     public function path()
     {
-        return route('threads.show', $this->getKey());
+        return env('APP_URL') . '/threads/' . $this->channel->slug . '/' . $this->id;
+//        return route('threads.show', $this->getKey());
     }
 
     public function replies()
@@ -26,6 +27,11 @@ class Thread extends Model
     public function addReply($reply)
     {
         $this->replies()->create($reply);
+    }
+
+    public function channel()
+    {
+        return $this->belongsTo(Channel::class);
     }
 
 }

@@ -25,8 +25,10 @@ class CreateThreadsTest extends TestCase
     /** @test */
     public function guests_cannot_see_the_create_thread_page()
     {
-        $this->expectException('Illuminate\Auth\AuthenticationException');
-        $this->get(route('threads.create'));
+        $this
+            ->withExceptionHandling()
+            ->get(route('threads.create'))
+            ->assertRedirect('/login');
     }
 
     /** @test */

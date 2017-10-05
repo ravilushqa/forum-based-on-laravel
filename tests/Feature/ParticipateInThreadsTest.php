@@ -9,7 +9,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
-class ParticipateInForumTest extends TestCase
+class ParticipateInThreadsTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -35,9 +35,23 @@ class ParticipateInForumTest extends TestCase
 
         $reply = make(Reply::class);
 
-        $this->post(route('threads.store', ['channel' => $thread->channel->slug, 'thread' => $thread->getKey()]), $reply->toArray());
+        $this->post(route('replies.store', ['channel' => $thread->channel->slug, 'thread' => $thread->getKey()]), $reply->toArray());
 
         $this->get($thread->path())
             ->assertSee($reply->body);
+    }
+
+    /** @test */
+    public function a_reply_requires_a_body()
+    {
+        $this->withExceptionHandling()->signIn();
+
+        $thread = create(Thread::class);
+
+        $reply = make(Reply::class, ['body' => null]);
+
+        $this
+            ->post(route('threads.store', ['channel' => $thread->channel->slug, 'thread' => $thread->getKey()]), $reply->toArray())
+            ->assertSessionHasErrors('body');
     }
 }

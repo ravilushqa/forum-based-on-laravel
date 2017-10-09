@@ -8,6 +8,7 @@ class Thread extends Model
 {
     protected $guarded = [];
 
+
     public function path()
     {
         return env('APP_URL') . '/threads/' . $this->channel->slug . '/' . $this->id;
@@ -32,6 +33,11 @@ class Thread extends Model
     public function channel()
     {
         return $this->belongsTo(Channel::class);
+    }
+
+    public function scopeFilter($query, $filters)
+    {
+        return $filters->apply($query);
     }
 
 }

@@ -24,7 +24,6 @@ class Thread extends Model
     public function path()
     {
         return env('APP_URL') . '/threads/' . $this->channel->slug . '/' . $this->id;
-//        return route('threads.show', $this->getKey());
     }
 
     /**
@@ -32,7 +31,8 @@ class Thread extends Model
      */
     public function replies()
     {
-        return $this->hasMany(Reply::class);
+        return $this->hasMany(Reply::class)
+            ->withCount('favorites');
     }
 
     /**

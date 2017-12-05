@@ -1,83 +1,57 @@
-<nav class="navbar navbar-default navbar-static-top">
-    <div class="container">
-        <div class="navbar-header">
+<nav id="primary-menu" class="style-2 center">
 
-            <!-- Collapsed Hamburger -->
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                <span class="sr-only">Toggle Navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
+    <ul>
+        <li><a href="#" class="current"><div>Browse</div></a>
+            <ul>
+                <li><a href="{{ route('threads.index') }}">All Threads</a></li>
 
-            <!-- Branding Image -->
-            <a class="navbar-brand" href="{{ url('/') }}">
-                {{ config('app.name', 'Laravel') }}
+                @if(auth()->check())
+                    <li><a href="{{ route('threads.index', ['by' => auth()->user()->name]) }}">My Threads</a></li>
+                @endif
+
+                <li><a href="{{ route('threads.index', ['popular' => 1]) }}">Popular Threads</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="{{ route('threads.create') }}">New Thread</a>
+        </li>
+        <li><a href="#" class="current"><div>Channels</div></a>
+            <ul>
+                @foreach($channels as $channel)
+                    <li><a href="{{route('threads.channel.index', ['channel' => $channel->slug])}}">{{ $channel->name }}</a></li>
+                @endforeach
+            </ul>
+        </li>
+    </ul>
+
+    <ul>
+        @guest
+            <li><a href="{{ route('login') }}">Login</a></li>
+            <li><a href="{{ route('register') }}">Register</a></li>
+        @else
+        <li><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                {{ Auth::user()->name }} <span class="caret"></span>
             </a>
-        </div>
 
-        <div class="collapse navbar-collapse" id="app-navbar-collapse">
-            <!-- Left Side Of Navbar -->
-            <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">Browse <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{ route('threads.index') }}">All Threads</a></li>
-
-                        @if(auth()->check())
-                            <li><a href="{{ route('threads.index', ['by' => auth()->user()->name]) }}">My Threads</a></li>
-                        @endif
-
-                        <li><a href="{{ route('threads.index', ['popular' => 1]) }}">Popular Threads</a></li>
-                    </ul>
-                </li>
-
+            <ul>
+                <li><a href="{{ route('profile', Auth::user()) }}">My Profile</a></li>
                 <li>
-                    <a href="{{ route('threads.create') }}">New Thread</a>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">Channels <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        @foreach($channels as $channel)
-                            <li><a href="{{route('threads.channel.index', ['channel' => $channel->slug])}}">{{ $channel->name }}</a></li>
-                        @endforeach
-                    </ul>
-                </li>
-
-            </ul>
-
-            <!-- Right Side Of Navbar -->
-            <ul class="nav navbar-nav navbar-right">
-                <!-- Authentication Links -->
-                @guest
-                <li><a href="{{ route('login') }}">Login</a></li>
-                <li><a href="{{ route('register') }}">Register</a></li>
-                @else
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            {{ Auth::user()->name }} <span class="caret"></span>
-                        </a>
-
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ route('profile', Auth::user()) }}">My Profile</a></li>
-                            <li>
-                                <a href="{{ route('logout') }}"
-                                   onclick="event.preventDefault();
+                    <a href="{{ route('logout') }}"
+                       onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                    Logout
-                                </a>
+                        Logout
+                    </a>
 
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    {{ csrf_field() }}
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                    @endguest
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        {{ csrf_field() }}
+                    </form>
+                </li>
             </ul>
-        </div>
-    </div>
-</nav>
+
+        </li>
+        @endguest
+    </ul>
+</nav><!-- #primary-menu end -->
+
+
+

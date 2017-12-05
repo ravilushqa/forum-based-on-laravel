@@ -1,37 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+    <!-- Post Content
+					============================================= -->
+    <div class="postcontent nobottommargin clearfix">
+
+        <!-- Posts
+        ============================================= -->
+        <div id="posts" class="small-thumbs">
                 @forelse($threads as $thread)
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="level">
-                                <h4 class="flex">
-                                    <a href={{ $thread->path() }}>
-                                        {{ $thread->title }}
-                                    </a>
-                                </h4>
-                                <a href="{{ $thread->path() }}">
-                                    {{ $thread->replies_count }} {{str_plural('reply', $thread->replies_count)}}
-                                </a>
-                            </div>
+                <div class="entry clearfix">
+                    <div class="entry-c">
+                        <div class="entry-title">
+                            <h2><a href="{{ $thread->path() }}">{{ $thread->title }}</a></h2>
                         </div>
-
-                        <div class="panel-body">
-                            <article>
-                                <div class="body">{{ $thread->body }}</div>
-                            </article>
-
-                            <hr>
+                        <ul class="entry-meta clearfix">
+                            <li><i class="icon-calendar3"></i>{{$thread->created_at->diffForHumans()}}</li>
+                            <li><a href="{{ route('profile', $thread->creator) }}">{{ $thread->creator->name }}</a></li>
+                            <li><i class="icon-folder-open"></i>
+                                <a href="{{route('threads.channel.index', ['channel' => $thread->channel->slug])}}">{{$thread->channel->slug}}</a>
+                            </li>
+                            <li><a href="{{ $thread->path() }}"><i class="icon-comments"></i>{{$thread->replies_count}}</a></li>
+                        </ul>
+                        <div class="entry-content">
+                            <p>{{ $thread->body }}</p>
                         </div>
                     </div>
+                </div>
                 @empty
                     <p>There are no relevant results at this time.</p>
                 @endforelse
-            </div>
         </div>
     </div>
 @endsection

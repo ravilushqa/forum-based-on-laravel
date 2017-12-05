@@ -75,5 +75,4 @@ class Thread extends Model
     {
         return $filters->apply($query);
     }
-
 }

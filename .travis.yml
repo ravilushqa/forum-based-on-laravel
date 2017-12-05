@@ -1,0 +1,19 @@
+language: php
+
+php:
+  - '7.1'
+
+before_script:
+  - cp .env.travis .env
+  - mysql -e 'create database homestead_test;'
+  - composer self-update
+  - composer install --no-interaction
+  - php artisan key:generate
+
+services:
+  - mysql
+
+script: make lint test
+
+after_script:
+  - vendor/bin/test-reporter

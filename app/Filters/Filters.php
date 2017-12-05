@@ -2,12 +2,13 @@
 
 namespace App\Filters;
 
-
 use Illuminate\Http\Request;
 
 abstract class Filters
 {
-    protected $request, $builder;
+    protected $request;
+
+    protected $builder;
 
     protected $filters = [];
 

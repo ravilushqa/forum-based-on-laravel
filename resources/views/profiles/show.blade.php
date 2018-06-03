@@ -16,9 +16,7 @@
                         {{ $date }}
                     </h3>
                     @foreach($activity as $record)
-                        @if (view()->exists("profiles.activities.{$record->type}"))
-                            @include("profiles.activities.{$record->type}", ['activity' => $record])
-                        @endif
+                        @include("profiles.activities.{$record->type}", ['activity' => $record])
                     @endforeach
                 @endforeach
             </div>

@@ -54,4 +54,28 @@ class ParticipateInThreadsTest extends TestCase
             ->post(route('threads.store', ['channel' => $thread->channel->slug, 'thread' => $thread->getKey()]), $reply->toArray())
             ->assertSessionHasErrors('body');
     }
+
+    /** @test */
+    public function unauthorized_users_cannot_delete_replies()
+    {
+        $this->withExceptionHandling();
+        $reply = create(Reply::class);
+
+        $this->delete(route('replies.destroy', $reply))
+            ->assertRedirect('login');
+    }
+
+    /** @test */
+    public function authorized_users_cannot_delete_replies()
+    {
+        $this->signIn();
+
+        $reply = create(Reply::class, ['user_id' => auth()->id()]);
+
+        $this->delete(route('replies.destroy', $reply))
+            ->assertStatus(302);
+
+        $this->assertDatabaseMissing('replies', $reply->toArray());
+
+    }
 }

@@ -37,8 +37,9 @@ class ParticipateInThreadsTest extends TestCase
 
         $this->post(route('replies.store', ['channel' => $thread->channel->slug, 'thread' => $thread->getKey()]), $reply->toArray());
 
-        $this->get($thread->path())
-            ->assertSee($reply->body);
+        $this->assertDatabaseHas('replies', ['body' => $reply->body]);
+
+        $this->assertEquals(1, $thread->fresh()->replies_count);
     }
 
     /** @test */
@@ -66,7 +67,7 @@ class ParticipateInThreadsTest extends TestCase
     }
 
     /** @test */
-    public function authorized_users_cannot_delete_replies()
+    public function authorized_users_can_delete_replies()
     {
         $this->signIn();
 
@@ -75,7 +76,9 @@ class ParticipateInThreadsTest extends TestCase
         $this->delete(route('replies.destroy', $reply))
             ->assertStatus(302);
 
-        $this->assertDatabaseMissing('replies', $reply->toArray());
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+
+        $this->assertEquals(0, $reply->thread->fresh()->replies_count);
 
     }
 
